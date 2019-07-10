@@ -1,8 +1,6 @@
 # CSRecord
 
-# LeetCode 刷题记录
-
-**字符串**
+**Markdown使用记录**
 
 
 ![markdown](https://www.mdeditor.com/images/logos/markdown.png "markdown")
