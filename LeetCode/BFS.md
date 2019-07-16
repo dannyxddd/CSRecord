@@ -2,7 +2,8 @@
 
 <!-- GFM-TOC -->
 * [1. 单词阶梯变换最短长度](#1-单词阶梯变换最短长度)
-* [2. 找矩阵中被包围的字母“O”](#2-找矩阵中被包围的字母“O”)
+* [2. 找矩阵中被包围的岛屿数量](#2-找矩阵中被包围的岛屿数量)
+* [3. 修改矩阵中被包围的字母“O”](#3-修改矩阵中被包围的字母“O”)
 <!-- GFM-TOC -->
 
 > BFS：广度优先遍历，非常适合求最短路径长度，当BFS遍历完一个点后，不会再来更改这个点的值，常用队列实现，典型应用是树的层次遍历。
@@ -53,8 +54,54 @@ public int ladderLength(String beginWord, String endWord, List<String> wordList)
 
 }
 ```
+## 2. 找矩阵中被包围的岛屿数量
+### [200. Number of Islands(Medium)](https://leetcode.com/problems/number-of-islands/)
 
-## 2. 找矩阵中被包围的字母“O”
+题意：二维矩阵中元素为0或者1，求被0包围的1的岛屿数量，边界可以看成被0包围
+
+```html
+Example:
+X X X X
+X O O X
+X X O X
+X O X X
+After running your function, the board should be:
+X X X X
+X X X X
+X X X X
+X O X X
+```
+解法：用DFS/BFS都能解，DFS更简单，遍历将1周围的连续1都标为0
+
+```java
+int count=0;
+public int numIslands(char[][] grid) {
+    if(grid.length==0||grid[0].length==0)return 0;
+    int m=grid.length,n=grid[0].length;
+    boolean dp[][]=new boolean[m][n];
+
+    for(int i=0;i<m;i++) {//将“1”以及与其相连的“1”全部变成“0”
+        for(int j=0;j<n;j++) {
+            if(grid[i][j]=='1'){
+                DFS(grid,i,j);	
+                count++;
+            }
+        }
+    }		
+    return count;
+}
+
+public void DFS(char[][] grid,int i,int j) {
+    if(i<0||j<0||i>=grid.length||j>=grid[i].length||grid[i][j]=='0')return;
+    grid[i][j]='0';
+    DFS(grid,i-1,j);
+    DFS(grid,i+1,j);
+    DFS(grid,i,j-1);
+    DFS(grid,i,j+1);
+}
+```
+
+## 3. 修改矩阵中被包围的字母“O”
 ### [130. Surrounded Regions(Medium)](https://leetcode.com/problems/surrounded-regions/)
 
 题意：二维矩阵中元素为O或者X，把所有被X包围的O改成X，边界的O不能改
