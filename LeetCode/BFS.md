@@ -60,16 +60,12 @@ public int ladderLength(String beginWord, String endWord, List<String> wordList)
 题意：二维矩阵中元素为0或者1，求被0包围的1的岛屿数量，边界可以看成被0包围
 
 ```html
-Example:
-X X X X
-X O O X
-X X O X
-X O X X
-After running your function, the board should be:
-X X X X
-X X X X
-X X X X
-X O X X
+Input:
+11000
+11000
+00100
+00011
+Output: 3
 ```
 解法：用DFS/BFS都能解，DFS更简单，遍历将1周围的连续1都标为0
 
