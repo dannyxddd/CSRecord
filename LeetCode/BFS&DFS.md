@@ -101,19 +101,19 @@ public List<String> findWords(char[][] board, String[] words) {
 }
     
 public void searchDFS(char[][] board, int i, int j, boolean[][] visit, List<String> list, TrieNode p) {
-		if(i>=board.length||i<0||j>=board[i].length||j<0||visit[i][j]||p.node[board[i][j]-'a']==null)
-        return;
-		p=p.node[board[i][j]-'a'];//字符存在
-		if(p.word!=null) {
-			  list.add(p.word);
-			  p.word=null;//避免再遇到重复单词
-		}
-		visit[i][j]=true;
-		searchDFS(board,i-1,j,visit,list,p);
-		searchDFS(board,i+1,j,visit,list,p);
-		searchDFS(board,i,j-1,visit,list,p);
-		searchDFS(board,i,j+1,visit,list,p);
-		visit[i][j]=false;
+    if(i>=board.length||i<0||j>=board[i].length||j<0||visit[i][j]||p.node[board[i][j]-'a']==null)
+	return;
+    p=p.node[board[i][j]-'a'];//字符存在
+    if(p.word!=null) {
+	list.add(p.word);
+	p.word=null;//避免再遇到重复单词
+    }
+    visit[i][j]=true;
+    searchDFS(board,i-1,j,visit,list,p);
+    searchDFS(board,i+1,j,visit,list,p);
+    searchDFS(board,i,j-1,visit,list,p);
+    searchDFS(board,i,j+1,visit,list,p);
+    visit[i][j]=false;
 }
 ```
 
