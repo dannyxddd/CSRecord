@@ -1,15 +1,62 @@
 # BFS/DFS类型
 
 <!-- GFM-TOC -->
-* [1. 单词阶梯变换最短长度](#1-单词阶梯变换最短长度)
-* [2. 找矩阵中被包围的岛屿数量](#2-找矩阵中被包围的岛屿数量)
-* [3. 修改矩阵中被包围的字母“O”](#3-修改矩阵中被包围的字母“O”)
+* [1. 矩阵中的单词搜索](#1-矩阵中的单词搜索)
+* [2. 单词阶梯变换的最短长度](#2-单词阶梯变换的最短长度)
+* [3. 找矩阵中被包围的岛屿数量](#3-找矩阵中被包围的岛屿数量)
+* [4. 修改矩阵中被包围的字母"O"](#4-修改矩阵中被包围的字母"O")
 <!-- GFM-TOC -->
 
 > BFS：广度优先遍历，非常适合求最短路径长度，当BFS遍历完一个点后，不会再来更改这个点的值，常用队列实现，典型应用是树的层次遍历。
 > DFS：深度优先遍历，非常适合遍历所有路径，当DFS遍历一条路径一定会走到头，那条路径不一定最短，DFS会反复更改同一个点的值，常用回溯法递归实现，典型应用是树的先序遍历、拓扑排序等。
 
-## 1. 单词阶梯变换最短长度
+## 1. 矩阵中的单词搜索
+### [79. Word Search(Medium)](https://leetcode.com/problems/word-search/)
+
+题意：在矩阵里搜索单词是否存在，字符来自上下左右，不能重复遍历
+
+```html
+board =
+[
+  ['A','B','C','E'],
+  ['S','F','C','S'],
+  ['A','D','E','E']
+]
+
+Given word = "ABCCED", return true.
+Given word = "SEE", return true.
+Given word = "ABCB", return false.
+```
+
+解法：DFS遍历思想，用一个visited数组标记节点是否遍历，回溯
+
+```java
+public boolean exist(char[][] board, String word) {
+    boolean visit[][]=new boolean[board.length][board[0].length];
+    for(int i=0;i<board.length;i++) {
+        for(int j=0;j<board[i].length;j++) {//DFS查找单词是否存在
+            if(word.charAt(0)==board[i][j]&&search(board,word,visit,i,j,0)) 
+                return true;
+        }
+    }
+    return false;        
+}
+
+public boolean search(char[][] board, String word,boolean visit[][],int i,int j,int length) {
+    if(length==word.length())return true;
+    if(i>=board.length||i<0||j>=board[i].length||j<0||word.charAt(length)!=board[i][j]||visit[i][j])
+        return false;
+    visit[i][j]=true;
+    if(search(board,word,visit,i,j-1,length+1)||search(board,word,visit,i,j+1,length+1)
+            ||search(board,word,visit,i-1,j,length+1)||search(board,word,visit,i+1,j,length+1)) 
+        return true;
+
+    visit[i][j]=false;
+    return false;	
+}
+```
+
+## 2. 单词阶梯变换的最短长度
 ### [127. Word Ladder(Medium)](https://leetcode.com/problems/word-ladder/)
 
 题意：给两个单词和一个字典，问至少多少次变换（1次变换1字符）才能从第一个单词到第二个单词
@@ -54,7 +101,7 @@ public int ladderLength(String beginWord, String endWord, List<String> wordList)
 
 }
 ```
-## 2. 找矩阵中被包围的岛屿数量
+## 3. 找矩阵中被包围的岛屿数量
 ### [200. Number of Islands(Medium)](https://leetcode.com/problems/number-of-islands/)
 
 题意：二维矩阵中元素为0或者1，求被0包围的1的岛屿数量，边界可以看成被0包围
@@ -97,7 +144,7 @@ public void DFS(char[][] grid,int i,int j) {
 }
 ```
 
-## 3. 修改矩阵中被包围的字母“O”
+## 4. 修改矩阵中被包围的字母"O"
 ### [130. Surrounded Regions(Medium)](https://leetcode.com/problems/surrounded-regions/)
 
 题意：二维矩阵中元素为O或者X，把所有被X包围的O改成X，边界的O不能改
