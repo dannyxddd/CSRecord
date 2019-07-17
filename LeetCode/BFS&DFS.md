@@ -55,6 +55,68 @@ public boolean search(char[][] board, String word,boolean visit[][],int i,int j,
     return false;	
 }
 ```
+### [212. Word Search II(Hard)](https://leetcode.com/problems/word-search-ii/)
+
+题意：给一个字符矩阵和一组单词的词典，在矩阵中搜索，返回矩阵中的字符能组成的所有单词
+
+```html
+Input: 
+board = [
+  ['o','a','a','n'],
+  ['e','t','a','e'],
+  ['i','h','k','r'],
+  ['i','f','l','v']
+]
+words = ["oath","pea","eat","rain"]
+Output: ["eat","oath"]
+```
+解法：这题其实是上题的扩展，上题只找一个单词，这题找多个单词，用字典树+DFS遍历的思想
+
+```java
+class TrieNode {
+    TrieNode[] node = new TrieNode[26];
+    String word;
+}
+	
+public List<String> findWords(char[][] board, String[] words) {
+    List<String> list=new ArrayList<String>();
+    boolean visit[][]=new boolean[board.length][board[0].length];
+    TrieNode root=new TrieNode();//建立字典树
+    for(String w:words) {//把词典中每个单词插入到字典树中
+        TrieNode p=root;
+        for(int i=0;i<w.length();i++) {
+            int c=w.charAt(i)-'a';
+            if(p.node[c]==null)
+                p.node[c]=new TrieNode();
+            p=p.node[c];
+        }
+        p.word=w;//单词的最后一位字符的节点上存word
+    }
+
+    for(int i=0;i<board.length;i++) {
+        for(int j=0;j<board[i].length;j++) //DFS遍历找所有单词
+            searchDFS(board,i,j,visit,list,root);
+    }
+    return list;
+}
+    
+public void searchDFS(char[][] board, int i, int j, boolean[][] visit, List<String> list, TrieNode p) {
+		if(i>=board.length||i<0||j>=board[i].length||j<0||visit[i][j]||p.node[board[i][j]-'a']==null)
+        return;
+		p=p.node[board[i][j]-'a'];//字符存在
+		if(p.word!=null) {
+			  list.add(p.word);
+			  p.word=null;//避免再遇到重复单词
+		}
+		visit[i][j]=true;
+		searchDFS(board,i-1,j,visit,list,p);
+		searchDFS(board,i+1,j,visit,list,p);
+		searchDFS(board,i,j-1,visit,list,p);
+		searchDFS(board,i,j+1,visit,list,p);
+		visit[i][j]=false;
+}
+```
+
 
 ## 2. 单词阶梯变换的最短长度
 ### [127. Word Ladder(Medium)](https://leetcode.com/problems/word-ladder/)
