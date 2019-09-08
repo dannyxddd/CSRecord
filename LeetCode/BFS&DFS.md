@@ -7,12 +7,14 @@
 * [4. 修改矩阵中被包围的字母"O"](#4-修改矩阵中被包围的字母O)
 * [5. 矩阵中的最长递增路径](#5-矩阵中的最长递增路径)
 * [6. 走有障碍物的矩阵最短路径](#6-走有障碍物的矩阵最短路径)
-
+* [7. 数组分成k个和相等的非空子集合](#7-数组分成k个和相等的非空子集合)
+* [8. 课程调度问题](#8-课程调度问题)
 <!-- GFM-TOC -->
 
 ```html
 BFS：广度优先遍历，非常适合求最短路径长度，当BFS遍历完一个点后，不会再来更改这个点的值，常用队列实现，典型应用是树的层次遍历。
-DFS：深度优先遍历，非常适合遍历所有路径，当DFS遍历一条路径一定会走到头，那条路径不一定最短，DFS会反复更改同一个点的值，常用回溯法递归实现，典型应用是树的先序遍历、拓扑排序等。
+DFS：深度优先遍历，非常适合遍历所有路径，当DFS遍历一条路径一定会走到头，那条路径不一定最短，DFS会反复更改同一个点的值。
+     常用回溯法递归实现，典型应用是树的先序遍历、拓扑排序等。
 ```
 
 ## 1. 矩阵中的单词搜索
@@ -467,3 +469,148 @@ private int calnum(int i) {
 }
 
 ```
+
+## 7. 数组分成k个和相等的非空子集合
+### [698. Partition to K Equal Sum Subsets(Medium)](https://leetcode.com/problems/partition-to-k-equal-sum-subsets/)
+
+题意：给一个数组nums和一个数字k，问数组能不能分成k个非空子集合，使得每个子集合的和相同
+
+```html
+Input: nums = [4, 3, 2, 3, 5, 2, 1], k = 4
+Output: True
+Explanation: It's possible to divide it into 4 subsets (5), (1, 4), (2,3), (2,3) with equal sums.
+
+```
+
+解法：用DFS递归找，用visited数组来记录哪些数组已经被选中了，然后调用递归函数使得k个子集合的每个和为target = sum/k。k=1时说明此时只需要组一个子集合，当前的就是直接返回true。如果cursum等于target了，再次调用递归，此时传入k-1，继续找下一个子数组。否则就从start开始遍历数组。
+
+```java
+public boolean canPartitionKSubsets(int[] nums, int k) {
+    int sum=0;
+    for(int i=0;i<nums.length;i++) sum+=nums[i];
+    if(sum%k!=0)return false;
+    boolean visited[]=new boolean[nums.length];
+    return canPartition(nums,k,sum/k,0,0,visited);
+}
+public boolean canPartition(int[] nums, int k, int target, int cursum, int start, boolean visited[]){
+    if(k==1) return true;
+    if(cursum==target)return canPartition(nums,k-1,target,0,0,visited);//找下一个子数组
+    for(int i=start;i<nums.length;i++){
+        if(visited[i])continue;
+        visited[i]=true;
+        if(canPartition(nums,k,target,cursum+nums[i],i+1,visited))return true;
+        visited[i]=false;
+    }
+    return false;
+}
+```
+
+## 8. 课程调度问题
+### [207. Course Schedule(Medium)](https://leetcode.com/problems/course-schedule/)
+
+题意：给定链表，元素是两个课程的先后顺序数组，问能不能修完全部课程
+
+```html
+Example 1:
+Input: 2, [[1,0]] 
+Output: true
+Explanation: There are a total of 2 courses to take. 
+             To take course 1 you should have finished course 0. So it is possible.
+
+Example 2:
+Input: 2, [[1,0],[0,1]]
+Output: false
+Explanation: There are a total of 2 courses to take. 
+             To take course 1 you should have finished course 0, and to take course 0 you should
+             also have finished course 1. So it is impossible.
+```
+
+解法：图+BFS，保存每个节点的后续课程列表，用队列把入度为0的加到列表中；图+DFS，保存每个节点的先修课程列表，用boolean数组判断每条节点链是否已访问过
+
+```java
+public boolean canFinish(int numCourses, int[][] prerequisites) {
+    ArrayList<Integer>[] graph =new ArrayList[numCourses];
+    int outdegree[] =new int[numCourses];
+    Queue<Integer> queue=new LinkedList<Integer>();
+    int count=0;
+    for(int i=0;i<numCourses;i++) 
+        graph[i]=new ArrayList<Integer>();
+    for(int i=0;i<prerequisites.length;i++) {
+        outdegree[prerequisites[i][1]]++;
+        graph[prerequisites[i][0]].add(prerequisites[i][1]);
+    }
+    for(int i=0;i<numCourses;i++) {
+        if(outdegree[i]==0) {
+            queue.add(i); count++;
+        }	
+    }
+
+    while(queue.size()!=0) {
+        int course=queue.poll();
+        for(int i=0;i<graph[course].size();i++) {
+            int p=graph[course].get(i);
+            outdegree[p]--;
+            if(outdegree[p]==0) {
+                queue.add(p); count++;
+            }					
+        }
+    }
+    return count==numCourses;    
+}
+```
+
+### [210. Course Schedule II(Medium)](https://leetcode.com/problems/course-schedule-ii/)
+
+题意：给定链表，元素是两个课程的先后顺序数组，给出课程学习的调度列表
+
+```html
+Example 1:
+
+Input: 2, [[1,0]] 
+Output: [0,1]
+Explanation: There are a total of 2 courses to take. To take course 1 you should have finished   
+             course 0. So the correct course order is [0,1] .
+
+Example 2:
+Input: 4, [[1,0],[2,0],[3,1],[3,2]]
+Output: [0,1,2,3] or [0,2,1,3]
+Explanation: There are a total of 4 courses to take. To take course 3 you should have finished both     
+             courses 1 and 2. Both courses 1 and 2 should be taken after you finished course 0. 
+             So one correct course order is [0,1,2,3]. Another correct ordering is [0,2,1,3] .
+```
+
+解法：图+BFS，保存每个节点的后续课程列表，用队列把入度为0的加到列表中
+
+```java
+public int[] findOrder(int numCourses, int[][] prerequisites) {
+    ArrayList<Integer>[] graph =new ArrayList[numCourses];
+    int[] re=new int[numCourses];
+    int[] indegree = new int[numCourses];
+    for(int i=0;i<numCourses;i++)
+        graph[i]=new ArrayList<Integer>();
+    for(int i=0;i<prerequisites.length;i++){
+        graph[prerequisites[i][1]].add(prerequisites[i][0]);
+        indegree[prerequisites[i][0]]++;
+    }
+    Queue<Integer> q = new LinkedList<Integer>();
+    int k=0;
+    for(int i=0;i<numCourses;i++){
+        if(indegree[i]==0) {
+            q.offer(i); re[k++]=i;
+        }		
+    }
+
+    while(!q.isEmpty()) {
+        int pre=q.poll();
+        for(int i=0;i<graph[pre].size();i++) {
+            indegree[graph[pre].get(i)]--;
+            if(indegree[graph[pre].get(i)]==0) {
+                q.offer(graph[pre].get(i));
+                re[k++]=graph[pre].get(i);
+            }
+        }
+    }
+    return k==numCourses?re:new int[0];
+}
+```
+
