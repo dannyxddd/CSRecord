@@ -5,10 +5,15 @@
 * [2. 单词阶梯变换的最短长度](#2-单词阶梯变换的最短长度)
 * [3. 找矩阵中被包围的岛屿数量](#3-找矩阵中被包围的岛屿数量)
 * [4. 修改矩阵中被包围的字母"O"](#4-修改矩阵中被包围的字母O)
+* [5. 矩阵中的最长递增路径](#5-矩阵中的最长递增路径)
+* [6. 走有障碍物的矩阵最短路径](#6-走有障碍物的矩阵最短路径)
+
 <!-- GFM-TOC -->
 
-> BFS：广度优先遍历，非常适合求最短路径长度，当BFS遍历完一个点后，不会再来更改这个点的值，常用队列实现，典型应用是树的层次遍历。
-> DFS：深度优先遍历，非常适合遍历所有路径，当DFS遍历一条路径一定会走到头，那条路径不一定最短，DFS会反复更改同一个点的值，常用回溯法递归实现，典型应用是树的先序遍历、拓扑排序等。
+```html
+BFS：广度优先遍历，非常适合求最短路径长度，当BFS遍历完一个点后，不会再来更改这个点的值，常用队列实现，典型应用是树的层次遍历。
+DFS：深度优先遍历，非常适合遍历所有路径，当DFS遍历一条路径一定会走到头，那条路径不一定最短，DFS会反复更改同一个点的值，常用回溯法递归实现，典型应用是树的先序遍历、拓扑排序等。
+```
 
 ## 1. 矩阵中的单词搜索
 ### [79. Word Search(Medium)](https://leetcode.com/problems/word-search/)
@@ -55,6 +60,7 @@ public boolean search(char[][] board, String word,boolean visit[][],int i,int j,
     return false;	
 }
 ```
+
 ### [212. Word Search II(Hard)](https://leetcode.com/problems/word-search-ii/)
 
 题意：给一个字符矩阵和一组单词的词典，在矩阵中搜索，返回矩阵中的字符能组成的所有单词
@@ -332,4 +338,132 @@ public void solve(char[][] board) {
          }
     }
 }
+```
+
+## 5. 矩阵中的最长递增路径
+### [329. Longest Increasing Path in a Matrix(Hard)](https://leetcode.com/problems/longest-increasing-path-in-a-matrix/)
+
+题意：给定二维矩阵，找矩阵中数字递增的最长路径长度，只能上下左右四个方向走，不能回走或者超过边界。
+
+```html
+Example 1:
+Input: nums = 
+[
+  [9,9,4],
+  [6,6,8],
+  [2,1,1]
+] 
+Output: 4 
+Explanation: The longest increasing path is [1, 2, 6, 9].
+
+Example 2:
+Input: nums = 
+[
+  [3,4,5],
+  [3,2,6],
+  [2,2,1]
+] 
+Output: 4 
+Explanation: The longest increasing path is [3, 4, 5, 6]. Moving diagonally is not allowed.
+```
+
+解法：用DP记录经过当前位置的最长长度，用DFS递归找，遇到已经有的dp直接返回，避免重复计算
+
+```java
+public int longestIncreasingPath(int[][] matrix) {
+    if(matrix.length==0||matrix[0].length==0)return 0;
+    int dp[][]=new int[matrix.length][matrix[0].length];
+    int result=0;
+    for(int i=0;i<matrix.length;i++)
+        for(int j=0;j<matrix[0].length;j++)
+            result=Math.max(result,DFS(matrix,i,j,Integer.MIN_VALUE,dp));
+    return result;
+}
+
+public int DFS(int[][] matrix,int i,int j,int pre,int dp[][]){        
+    if(i<0||i>=matrix.length||j<0||j>=matrix[0].length||pre>=matrix[i][j]) return 0;
+    if(dp[i][j]!=0)return dp[i][j];
+    int res1=Math.max(DFS(matrix,i-1,j,matrix[i][j],dp),DFS(matrix,i+1,j,matrix[i][j],dp));
+    int res2=Math.max(DFS(matrix,i,j-1,matrix[i][j],dp),DFS(matrix,i,j+1,matrix[i][j],dp));           dp[i][j]=Math.max(res1,res2)+1;
+    return dp[i][j];
+}
+```
+
+## 6. 走有障碍物的矩阵最短路径
+### [1091. Shortest Path in Binary Matrix(Medium)](https://leetcode.com/problems/shortest-path-in-binary-matrix/)
+
+题意：N✖️N矩阵，有一些障碍物，0表示能走，1表示不能走，可以往8个方向走，求从(0,0)到(N-1，N-1)的最短路径
+
+```html
+Example 1:
+Input: [[0,1],[1,0]]
+Output: 2
+
+Example 2:
+Input: [[0,0,0],[1,1,0],[1,1,0]]
+Output: 4 
+
+Note:
+1 <= grid.length == grid[0].length <= 100
+grid[r][c] is 0 or 1
+```
+
+解法：找最短路径，用BFS解
+
+```java
+public int shortestPathBinaryMatrix(int[][] grid) {
+    int m=grid.length,n=grid[0].length;
+    if(grid[0][0]==1||grid[m-1][n-1]==1)return -1;
+    int move[][]=new int[][]{{0,1},{0,-1},{-1,0},{1,0},{-1,-1},{-1,1},{1,-1},{1,1}}; 
+
+    int sum=0;
+    boolean[][] visited = new boolean[m][n];
+    visited[0][0]=true;
+    Queue<int[]> q=new LinkedList<>();
+    q.offer(new int[]{0,0});
+
+    while(!q.isEmpty()) {
+        int size=q.size();
+        for(int i=0;i<size;i++) {
+            int[] point=q.poll();
+            if(point[0]==m-1&&point[1]==n-1) return ++sum;
+            for(int j=0;j<8;j++) {
+                int nextX=point[0]+move[j][0];
+                int nextY=point[1]+move[j][1];
+                if(nextX>=0&&nextX<m&&nextY>=0&&nextY<n&&!visited[nextX][nextY]&&grid[nextX][nextY]==0) {
+                    q.offer(new int[]{nextX,nextY});
+                    visited[nextX][nextY]=true;
+                }
+
+            }
+        }
+        sum++;
+    }
+    return -1;
+}
+```
+### [剑指offer-矩阵能遍历的格子数]
+
+剑指offer相似题型：地上有一个m行和n列的方格，一个机器人从坐标0,0的格子开始移动，每一次只能向左，右，上，下四个方向移动一格，但是不能进入行坐标和列坐标的数位之和大于k的格子。例如，当k为18时，机器人能够进入方格（35,37），因为3+5+3+7 = 18。但是，它不能进入方格（35,38），因为3+5+3+8 = 19。请问该机器人能够达到多少个格子？
+
+解法：遍历所有路径，用DFS解
+
+```java
+public int movingCount(int threshold, int rows, int cols){
+    boolean visit[][]=new boolean[rows][cols];
+    return ismoving(rows,cols,0,0,threshold,visit);
+}
+private int ismoving(int rows, int cols, int i, int j, int threshold, boolean visit[][]) {
+    if(i<0||i>=rows||j<0||j>=cols||calnum(i)+calnum(j)>threshold||visit[i][j])return 0; 
+    visit[i][j]=true;
+    return ismoving(rows,cols,i-1,j,threshold,visit)+ismoving(rows,cols,i+1,j,threshold,visit)+ismoving(rows,cols,i,j-1,threshold,visit)+ismoving(rows,cols,i,j+1,threshold,visit)+1;
+}
+private int calnum(int i) {
+    int sum=0;
+    while(i!=0) {
+       sum+=i%10; i/=10;
+    }
+    return sum;
+}
+
 ```
