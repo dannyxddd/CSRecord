@@ -1,6 +1,6 @@
-| &nbsp;算法| 操作系统 | 计算机网络 | 数据库 | Java基础 | 虚拟机 | 多线程 | 设计模式 | J2EE | 大数据相关 |
+|图标1| 图标2 | 图标3 | 图标4 | 图标5 | 图标6 | 图标7 | 图标8 | 图标9 | 图标10 |
 | :---: | :----: | :---: | :----: | :----: | :----: | :----: | :----: | :----: | :----: |
-| [:algorithm:](#algorithm-算法) | [:os:](#os-操作系统) | [:network:](#network-计算机网络) | [:database:](#database-数据库) | [:Javafun:](#Javafun-Java基础) |[:JVM:](#JVM-虚拟机)| [:multithreading:](#multithreading-多线程) |[:designPat:](#designPat-设计模式)| [:j2ee:](#j2ee-J2EE) |[:bigdata:](#bigdata-大数据相关)|
+| [算法](#算法) | [操作系统](#操作系统) | [计算机网络](#计算机网络) | [数据库](#数据库) | [Java基础](#Java基础) |[JVM](#JVM)| [多线程](#多线程) |[设计模式](#设计模式)| [J2EE](#J2EE) |[大数据相关](#大数据相关)|
 
 <br>
 <div align="center">
@@ -8,51 +8,51 @@
 </div>
 <br>
 
-## :algorithm: 算法
+## 算法
 
 - [剑指Offer](https://github.com/dannyxddd/CSRecord/blob/master/剑指offer目录.md)
 - [Leetcode](https://github.com/dannyxddd/CSRecord/blob/master/LeetCode目录.md)
 
-## :os: 操作系统
+## 操作系统
 
 - [计算机操作系统]
 
-## :network: 计算机网络 
+## 计算机网络 
 
 - [计算机网络]
 
-## :database: 数据库
+## 数据库
 
 - [数据库原理]
 - [MYSQL]
 - [Redis]
 
-## :Javafun: Java基础 
+## Java基础 
 
 - [Java 基础]
 - [Java 容器]
 - [Java I/O]
 
-## :JVM: 虚拟机
+## JVM
 
 - [内存模型]
 
-## :multithreading: 多线程 
+## 多线程 
 
 - [Java并发]
 
-## :designPat: 设计模式
+## 设计模式
 
 - [面向对象思想]
 - [设计模式]
 
-## :j2ee: J2EE
+## J2EE
 
 - [J2EE基础]
 - [Spring]
 - [Hibernate]
 
-## :bigdata: 大数据相关
+## 大数据相关
 
 - [海量数据处理]
 - [分布式]
