@@ -10,8 +10,8 @@
 
 ## 算法
 
-- [剑指Offer](https://github.com/dannyxddd/CSRecord/blob/master/剑指offer目录.md)
-- [Leetcode](https://github.com/dannyxddd/CSRecord/blob/master/LeetCode目录.md)
+- [剑指Offer](剑指Offer目录.md)
+- [LeetCode](LeetCode/LeetCode目录.md)
 
 ## 操作系统
 
